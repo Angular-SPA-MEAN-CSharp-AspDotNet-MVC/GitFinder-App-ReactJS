@@ -1,33 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
 import UserItem from './UserItem';
+import Spinner from '../Spinner';
 
-class Users extends Component {
-    state = {
-        users: [
-            {
-                id: '1',
-                avatar_url: 'https://avatars0.githubusercontent.com/u/1?v=4',
-                login: 'mojombo',
-                html_url: 'https://github.com/mojombo'
-            },
-            {
-                id: '2',
-                avatar_url: 'https://avatars0.githubusercontent.com/u/2?v=4',
-                login: 'defunkt',
-                html_url: 'https://github.com/defunkt'
-            },
-            {
-                id: '3',
-                avatar_url: 'https://avatars0.githubusercontent.com/u/3?v=4',
-                login: 'pjhyett',
-                html_url: 'https://github.com/pjhyett'
-            }
-        ]
-    };
-    render() 
-    {   return (
+const Users = ({users, loading}) => {
+    if(loading){
+       return <Spinner/>
+    }
+    else{
+        return (
             <div style={userStyle}>                       
-                {this.state.users.map(user => 
+                {users.map(user => 
                 {                
                     return <UserItem key={user.id} user={user}/>
                 })}     
@@ -35,7 +17,6 @@ class Users extends Component {
         );
     }
 }
-
 
 const userStyle = {
     display: 'grid',
