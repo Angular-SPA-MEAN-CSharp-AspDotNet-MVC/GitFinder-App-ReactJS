@@ -10,7 +10,7 @@ export class Navbar extends Component {
 
     static propTypes = {
         title: PropTypes.string.isRequired,
-        icon: PropTypes.shape.isRequired
+        icon: PropTypes.string.isRequired
     }
 
     render() {
