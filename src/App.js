@@ -8,12 +8,14 @@ import Alert from './component/Alert';
 import About from './component/pages/About';
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Repos } from './component/pages/Repos';
 
 
 class App extends Component {  
   state = {
     users: [],
     user: {},
+    repos:[],
     loading: false,
     alert: null,
   }
@@ -25,15 +27,15 @@ class App extends Component {
 //       this.setState({users : res.data, loading: false});
 // }
 
-  searchUser = async (text) => {
-    this.setState({loading: true});
-    console.log('search Text is ' + text)
-    const res = await axios.get(`https://api.github.com/search/users?q=`+
-      `${text}&Client_Id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`+
-      `&Client_Secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);  
-    console.log(res);
-    this.setState({users: res.data.items , loading: false});
-  }
+searchUser = async (text) => {
+  this.setState({loading: true});
+  console.log('search Text is ' + text)
+  const res = await axios.get(`https://api.github.com/search/users?q=`+
+    `${text}&Client_Id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`+
+    `&Client_Secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);  
+  console.log(res);
+  this.setState({users: res.data.items , loading: false});
+}
 
   clearUser = () => {
     this.setState({users:[], loading: false})
@@ -49,6 +51,18 @@ class App extends Component {
     console.log(this.state.user);
   }
 
+  getRepos = async (login) => {
+    
+    this.setState({loading: true});
+    const res = await axios.get(`https://api.github.com/users/`+
+    `${login}/repos?per_page=5&sort=created:asc&Client_Id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`+
+    `&Client_Secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);  
+    this.setState({repos: res.data, loading: false});
+    console.log('res of repo get');
+    //console.log(this.state.repos);
+
+  }
+
   setAlert =(msg, type) =>{
     this.setState({alert: {msg, type}});
 
@@ -56,7 +70,7 @@ class App extends Component {
   }
 
   render(){
-    const {users, user, loading} = this.state;  
+    const {users, user, repos, loading} = this.state;  
     return (
       <Router>              
         <div className="App">     
@@ -68,11 +82,11 @@ class App extends Component {
                 exact path='/' 
                 render={props =>
                   <Fragment>
-                              <Search searchUser={this.searchUser} 
-                              clearUser={this.clearUser} 
-                              showClearUser={users.length >0 ? true: false}
-                              setAlert={this.setAlert}/>
-                              <Users loading={loading} users= {users}/>  
+                      <Search searchUser={this.searchUser} 
+                      clearUser={this.clearUser} 
+                      showClearUser={users.length >0 ? true: false}
+                      setAlert={this.setAlert}/>
+                      <Users loading={loading} users= {users}/>  
                   </Fragment>}>
               </Route> 
               <Route
@@ -84,8 +98,10 @@ class App extends Component {
                   <Fragment>
                     <User
                       {...props}
-                      user = {user}
-                      getUser ={this.getUser}
+                      user = {user} 
+                      repos = {repos}
+                      getUser ={this.getUser} 
+                      getRepos ={this.getRepos}                     
                       loading ={loading}
                     ></User>
                   </Fragment>}>
