@@ -60,7 +60,7 @@ export class User extends Component {
                         <div>
                             <h1>Bio:</h1>
                             <p>{bio}</p>
-                            <a className='btn btn-dark' src={public_repos}>Visit Github Profile</a>
+                            <a className='btn btn-dark' href={html_url}>Visit Github Profile</a>
                             <br/>
                             <ul>
                                 <li>
