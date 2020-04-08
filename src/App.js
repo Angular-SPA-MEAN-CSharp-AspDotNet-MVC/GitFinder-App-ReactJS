@@ -13,7 +13,6 @@ import { Repos } from './component/pages/Repos';
 import GithubState from './context/github/githubState';
 
 const App = () => { 
-  const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,22 +26,6 @@ const App = () => {
 //       this.setState({users : res.data, loading: false});
 // }
 
-const clearUser = () => {
-    setUsers( [] );
-    setLoading(false);
-  }
-
-const getUser = async (login) => {  // 'login' is the username
-    
-    setLoading(true);
-    const res = await axios.get(`https://api.github.com/users/`+
-    `${login}?Client_Id=${process.env.REACT_APP_GITHUB_CLIENT_ID}`+
-    `&Client_Secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);  
-    setUser( res.data);
-    setLoading(false);
-    console.log('res get');
-    console.log(user);
-  }
 
 const getRepos = async (login) => {
     
@@ -77,10 +60,8 @@ const showAlert =(msg, type) =>{
                 render={props =>
                   <Fragment>
                       <Search
-                      clearUser={clearUser} 
-                      showClearUser={users.length >0 ? true: false}
-                      setAlert={showAlert}/>
-                      <Users loading={loading} users= {users}/>  
+                        setAlert={showAlert}/>
+                      <Users/>  
                   </Fragment>}>
               </Route> 
               <Route
@@ -92,11 +73,8 @@ const showAlert =(msg, type) =>{
                   <Fragment>
                     <User
                       {...props}
-                      user = {user} 
                       repos = {repos}
-                      getUser ={getUser} 
-                      getRepos ={getRepos}                     
-                      loading ={loading}
+                      getRepos ={getRepos}      
                     ></User>
                   </Fragment>}>
               </Route>                    
